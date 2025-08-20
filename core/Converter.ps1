@@ -41,7 +41,8 @@ class Converter {
     hidden
     [Void]
     writeDestination([string]$line) {
-        Add-Content -Path $this.destination -Value $line -Encoding UTF8 -ErrorAction Stop
+        $encoding = [System.Text.UTF8Encoding]::new($false)
+        [System.IO.File]::AppendAllText($this.destination, "$line`r`n", $encoding)
     }
 
     hidden
