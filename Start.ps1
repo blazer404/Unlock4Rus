@@ -14,6 +14,7 @@ try {
 } catch {
     Write-Host "  Load modules failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
+    Read-Host
     exit
 }
 
@@ -25,6 +26,7 @@ try {
 } catch {
     Write-Host "  Hosts file download failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
+    Read-Host
     exit
 }
 Write-Host "  Hosts file downloaded to `"$( $HOSTS_DESTINATION )`"" -ForegroundColor Green
@@ -37,6 +39,7 @@ try {
 } catch {
     Write-Host "  Hosts file conversion failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
+    Read-Host
     exit
 }
 Write-Host "  Hosts file converted to `"$( $MTK_HOSTS_DESTINATION )`"" -ForegroundColor Green
@@ -49,6 +52,7 @@ try {
 catch {
     Write-Host "  Unload modules failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
+    Read-Host
     exit
 }
 
