@@ -85,6 +85,9 @@ class Converter {
         if ($this.ipAddress -eq "" -or $this.hostName -eq "") {
             return ""
         }
+        if ($this.ipAddress -eq "0.0.0.0") {
+            return "add cname=0.0.0.0 name=$( $this.hostName ) type=CNAME comment=`"$( $this.groupName )`""
+        }
         return "add address=$( $this.ipAddress ) name=$( $this.hostName ) type=A comment=`"$( $this.groupName )`""
     }
 
