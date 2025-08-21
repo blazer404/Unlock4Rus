@@ -7,6 +7,8 @@ class Converter {
     hidden [String]$hostName
     hidden [String]$groupName
 
+    hidden[Array]$processedHostNames
+
 
     Converter([String]$source, [String]$destination) {
         $this.source = $source
@@ -24,6 +26,9 @@ class Converter {
                 $this.writeToDestination("`n$line")
             }
             $line = $this.convertOneLine($line)
+            if ($line.Length -eq 0) {
+                continue
+            }
             $this.writeToDestination($line)
         }
     }
@@ -67,6 +72,11 @@ class Converter {
         $exploded = $line.Split(" ")
         $this.ipAddress = $exploded[0]
         $this.hostName = $exploded[1]
+
+        if ($this.processedHostNames -contains $this.hostName) {
+            return ""
+        }
+        $this.processedHostNames += $this.hostName
 
         return $this.formattedLine()
     }
