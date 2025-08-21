@@ -26,27 +26,27 @@ try {
 Write-Host
 Write-Host "- Downloading hosts file..."
 try {
-    [Downloader]::download($HOSTS_SOURCE, $HOSTS_DESTINATION)
+    [Downloader]::download($HOSTS_SRC, $HOSTS_DST)
 } catch {
     Write-Host "  Hosts file download failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
     Read-Host
     exit
 }
-Write-Host "  Hosts file downloaded to `"$( $HOSTS_DESTINATION )`"" -ForegroundColor Green
+Write-Host "  Hosts file downloaded to `"$( $HOSTS_DST )`"" -ForegroundColor Green
 
 # Конвертация блэклиста в нужный формат
 Write-Host
 Write-Host "- Converting hosts file..."
 try {
-    [Converter]::new($HOSTS_DESTINATION, $MTK_HOSTS_DESTINATION).convert()
+    [Converter]::new($HOSTS_DST, $STATIC_DNS_DST).convert()
 } catch {
     Write-Host "  Hosts file conversion failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
     Read-Host
     exit
 }
-Write-Host "  Hosts file converted to `"$( $MTK_HOSTS_DESTINATION )`"" -ForegroundColor Green
+Write-Host "  Hosts file converted to `"$( $STATIC_DNS_DST )`"" -ForegroundColor Green
 
 # Выгрузка модулей
 Write-Host
