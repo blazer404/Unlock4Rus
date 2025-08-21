@@ -16,11 +16,15 @@ class Converter {
     [Void]
     convert() {
         $this.removeDestinationIfExists()
-        $this.writeDestination("/ip dns static")
+        $this.writeToDestination("/ip dns static")
         $data = $this.readSource()
         foreach ($line in $data) {
+            $isComment = $line.StartsWith("#")
+            if ($isComment) {
+                $this.writeToDestination("`n$line")
+            }
             $line = $this.convertOneLine($line)
-            $this.writeDestination($line)
+            $this.writeToDestination($line)
         }
     }
 
@@ -40,14 +44,14 @@ class Converter {
 
     hidden
     [Void]
-    writeDestination([string]$line) {
+    writeToDestination([String]$line) {
         $encoding = [System.Text.UTF8Encoding]::new($false)
         [System.IO.File]::AppendAllText($this.destination, "$line`r`n", $encoding)
     }
 
     hidden
     [String]
-    convertOneLine([string]$line) {
+    convertOneLine([String]$line) {
         $line = $line.Trim()
         if ($line.Length -eq 0) {
             continue
@@ -71,7 +75,7 @@ class Converter {
     [String]
     escapedString([String]$string) {
         $bytes = [System.Text.Encoding]::GetEncoding(1251).GetBytes($string)
-        $escaped = ($bytes | ForEach-Object { "\" + $_.ToString("X2") }) -join ''
+        $escaped = ($bytes | ForEach-Object { "\" + $_.ToString("X2") }) -join ""
         return $escaped
     }
 

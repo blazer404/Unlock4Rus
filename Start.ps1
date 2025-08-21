@@ -52,8 +52,7 @@ Write-Host "  Hosts file converted to `"$( $STATIC_DNS_DST )`"" -ForegroundColor
 Write-Host
 try {
     Import-Module "$PSScriptRoot\core\Unloader.ps1" -Force -ErrorAction Stop
-}
-catch {
+} catch {
     Write-Host "  Unload modules failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
     Read-Host
