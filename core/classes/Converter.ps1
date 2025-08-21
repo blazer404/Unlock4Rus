@@ -13,6 +13,9 @@ class Converter {
     Converter([String]$source, [String]$destination) {
         $this.source = $source
         $this.destination = $destination
+
+        $this.ipAddress = $this.hostName = $this.groupName = ""
+        $this.processedHostNames = @()
     }
 
     [Void]
@@ -59,14 +62,14 @@ class Converter {
     convertOneLine([String]$line) {
         $line = $line.Trim()
         if ($line.Length -eq 0) {
-            continue
+            return ""
         }
 
         $isComment = $line.StartsWith("#")
         if ($isComment) {
             $name = $line.TrimStart("#").TrimEnd(":").Trim()
             $this.groupName = $this.escapedString($name)
-            continue
+            return ""
         }
 
         $exploded = $line.Split(" ")
