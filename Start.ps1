@@ -10,9 +10,9 @@ Write-Host -ForegroundColor Blue "                                          by b
 # Загрузка модулей
 Write-Host
 try {
-    Import-Module "$PSScriptRoot\Autoloader.ps1" -Force -ErrorAction Stop
+    Import-Module "$PSScriptRoot\core\Autoloader.ps1" -Force -ErrorAction Stop
 } catch {
-    Write-Host "  Autoloader failed to load!" -ForegroundColor Red
+    Write-Host "  Load modules failed!" -ForegroundColor Red
     Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
     exit
 }
