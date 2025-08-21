@@ -41,6 +41,17 @@ try {
 }
 Write-Host "  Hosts file converted to `"$( $MTK_HOSTS_DESTINATION )`"" -ForegroundColor Green
 
+# Выгрузка модулей
+Write-Host
+try {
+    Import-Module "$PSScriptRoot\core\Unloader.ps1" -Force -ErrorAction Stop
+}
+catch {
+    Write-Host "  Unload modules failed!" -ForegroundColor Red
+    Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
+    exit
+}
+
 # Jobs done!
 Write-Host
 Write-Host "Done! Press Any key to exit..." -ForegroundColor Cyan
