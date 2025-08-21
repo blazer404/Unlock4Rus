@@ -55,7 +55,8 @@ class Converter {
 
         $isComment = $line.StartsWith("#")
         if ($isComment) {
-            $this.groupName = $line.TrimStart("#").TrimEnd(":").Trim()
+            $name = $line.TrimStart("#").TrimEnd(":").Trim()
+            $this.groupName = $this.escapedString($name)
             continue
         }
 
@@ -64,6 +65,14 @@ class Converter {
         $this.hostName = $exploded[1]
 
         return $this.formattedLine()
+    }
+
+    hidden
+    [String]
+    escapedString([String]$string) {
+        $bytes = [System.Text.Encoding]::GetEncoding(1251).GetBytes($string)
+        $escaped = ($bytes | ForEach-Object { "\" + $_.ToString("X2") }) -join ''
+        return $escaped
     }
 
     hidden
