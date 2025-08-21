@@ -1,11 +1,15 @@
-Write-Host
-Write-Host -ForegroundColor Blue "     __  __      __           __   __ __  ____"
-Write-Host -ForegroundColor Blue "    / / / /___  / /___  _____/ /__/ // / / __ \__  _______"
-Write-Host -ForegroundColor Blue "   / / / / __ \/ / __ \/ ___/ //_/ // /_/ /_/ / / / / ___/"
-Write-Host -ForegroundColor Blue "  / /_/ / / / / / /_/ / /__/ ,< /__  __/ _, _/ /_/ (__  )"
-Write-Host -ForegroundColor Blue "  \____/_/ /_/_/\____/\___/_/|_|  /_/ /_/ |_|\__,_/____/"
-Write-Host
-Write-Host -ForegroundColor Blue "                                          by blazer404"
+$logo = @"
+
+     __  __      __           __   __ __  ____
+    / / / /___  / /___  _____/ /__/ // / / __ \__  _______
+   / / / / __ \/ / __ \/ ___/ //_/ // /_/ /_/ / / / / ___/
+  / /_/ / / / / / /_/ / /__/ ,< /__  __/ _, _/ /_/ (__  )
+  \____/_/ /_/_/\____/\___/_/|_|  /_/ /_/ |_|\__,_/____/
+
+                                          by blazer404
+"@
+Write-Host $logo -ForegroundColor DarkCyan
+
 
 # Загрузка модулей
 Write-Host
@@ -58,5 +62,5 @@ catch {
 
 # Jobs done!
 Write-Host
-Write-Host "Done! Press Any key to exit..." -ForegroundColor Cyan
+Write-Host "  Done! Press Any key to exit..." -ForegroundColor Cyan
 Read-Host
