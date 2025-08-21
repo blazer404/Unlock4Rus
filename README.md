@@ -32,10 +32,15 @@
 - Загрузить файл `static_dns.rsc` на MikroTik.
 - Выполнить в терминале:
   ``` bash
-  /import file-name=static_dns.rsc
-  /file remove static.rsc
+  /import file-name=static_dns.rsc verbose=progress
+  /file remove static_dns.rsc
    ```
   Или просто вставить содержимое `static_dns.rsc` в терминал.
+
+> Если появляется ошибка `Script Error: failure: entry already exists`, то необходимо удалить предыдущие статические
+> DNS-записи.
+>
+> Ключ `verbose=progress` выдаст в какой строке произошла ошибка.
 
 ---
 
