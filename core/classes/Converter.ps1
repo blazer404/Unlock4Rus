@@ -8,6 +8,7 @@ class Converter {
     hidden [String]$groupName
 
     hidden[Array]$processedHostNames
+    hidden[String]$commentPrefix
 
 
     Converter([String]$source, [String]$destination) {
@@ -16,12 +17,13 @@ class Converter {
 
         $this.ipAddress = $this.hostName = $this.groupName = ""
         $this.processedHostNames = @()
+        $this.commentPrefix = "U4R"
     }
 
     [Void]
     convert() {
         $this.removeDestinationIfExists()
-        $this.writeToDestination("/ip dns static")
+        $this.writeScriptStart()
         $data = $this.readSource()
         foreach ($line in $data) {
             $isComment = $line.StartsWith("#")
@@ -42,6 +44,14 @@ class Converter {
         if (Test-Path $this.destination) {
             Remove-Item $this.destination -Force -ErrorAction Stop
         }
+    }
+
+    hidden
+    [Void]
+    writeScriptStart() {
+        $escapedCommentPrefix = $this.escapedString($this.commentPrefix)
+        $this.writeToDestination("/ip dns static")
+        $this.writeToDestination("remove [find where comment~`"^$( $escapedCommentPrefix )`"]")
     }
 
     hidden
@@ -67,8 +77,7 @@ class Converter {
 
         $isComment = $line.StartsWith("#")
         if ($isComment) {
-            $name = $line.TrimStart("#").TrimEnd(":").Trim()
-            $this.groupName = $this.escapedString($name)
+            $this.groupName = $line.TrimStart("#").TrimEnd(":").Trim()
             return ""
         }
 
@@ -98,10 +107,12 @@ class Converter {
         if ($this.ipAddress -eq "" -or $this.hostName -eq "") {
             return ""
         }
+        $comment = "$( $this.commentPrefix ) $( $this.groupName )"
+        $comment = $this.escapedString($comment)
         if ($this.ipAddress -eq "0.0.0.0") {
-            return "add cname=0.0.0.0 name=$( $this.hostName ) type=CNAME comment=`"$( $this.groupName )`""
+            return "add cname=0.0.0.0 name=$( $this.hostName ) type=CNAME comment=`"$( $comment )`""
         }
-        return "add address=$( $this.ipAddress ) name=$( $this.hostName ) type=A comment=`"$( $this.groupName )`""
+        return "add address=$( $this.ipAddress ) name=$( $this.hostName ) type=A comment=`"$( $comment )`""
     }
 
 }
