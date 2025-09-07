@@ -1,4 +1,4 @@
-class Constant {
+class ConstantCreator {
 
     static
     [Void]

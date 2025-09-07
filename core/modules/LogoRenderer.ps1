@@ -1,4 +1,4 @@
-class Logo {
+class LogoRenderer {
 
     static
     [Void]

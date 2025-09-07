@@ -4,8 +4,8 @@ using module ".\core\Autoloader.ps1"
 function Main() {
     while ($true) {
         Clear-Host
-        [Logo]::show()
-        [Menu]::show()
+        [LogoRenderer]::show()
+        [MenuRenderer]::show()
         $choice = Read-Host "`n- Enter your choice"
         switch ($choice) {
             "1" { ProcessHosts -mode "Unblock" }
@@ -48,7 +48,7 @@ function ConvertHosts([String]$mode) {
     Write-Host
     Write-Host "- Converting hosts file..."
     try {
-        [Converter]::new($HOSTS_DST, $STATIC_DNS_DST, $mode).convert()
+        [HostsConverter]::new($HOSTS_DST, $STATIC_DNS_DST, $mode).convert()
     } catch {
         Write-Host "  Hosts file conversion failed!" -ForegroundColor Red
         Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red

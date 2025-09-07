@@ -1,14 +1,14 @@
-class MenuItem {
+class MenuEntry {
     $key
     $text
     $extraInfo = ""
 
-    MenuItem([String]$key, [String]$text) {
+    MenuEntry([String]$key, [String]$text) {
         $this.key = $key
         $this.text = $text
     }
 
-    MenuItem([String]$key, [String]$text, [String]$extraInfo) {
+    MenuEntry([String]$key, [String]$text, [String]$extraInfo) {
         $this.key = $key
         $this.text = $text
         $this.extraInfo = $extraInfo

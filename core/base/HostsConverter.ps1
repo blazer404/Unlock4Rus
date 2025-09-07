@@ -1,4 +1,4 @@
-class Converter {
+class HostsConverter {
 
     [String]$source
     [String]$destination
@@ -12,7 +12,7 @@ class Converter {
     hidden[String]$commentPrefix
 
 
-    Converter([String]$source, [String]$destination, [String]$mode) {
+    HostsConverter([String]$source, [String]$destination, [String]$mode) {
         $this.source = $source
         $this.destination = $destination
         $this.mode = $mode
