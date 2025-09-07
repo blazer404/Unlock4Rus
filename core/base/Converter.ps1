@@ -2,6 +2,7 @@ class Converter {
 
     [String]$source
     [String]$destination
+    [String]$mode
 
     hidden [String]$ipAddress
     hidden [String]$hostName
@@ -11,9 +12,10 @@ class Converter {
     hidden[String]$commentPrefix
 
 
-    Converter([String]$source, [String]$destination) {
+    Converter([String]$source, [String]$destination, [String]$mode) {
         $this.source = $source
         $this.destination = $destination
+        $this.mode = $mode
 
         $this.ipAddress = $this.hostName = $this.groupName = ""
         $this.processedHostNames = @()
@@ -22,6 +24,8 @@ class Converter {
 
     [Void]
     convert() {
+        Write-Host "  Mode: $( $this.mode )" -ForegroundColor Yellow
+
         $this.removeDestinationIfExists()
         $this.writeScriptStart()
         $data = $this.readSource()
@@ -107,12 +111,23 @@ class Converter {
         if ($this.ipAddress -eq "" -or $this.hostName -eq "") {
             return ""
         }
+        if (!$this.isValidMode()) {
+            return ""
+        }
         $comment = "$( $this.commentPrefix ) $( $this.groupName )"
         $comment = $this.escapedString($comment)
         if ($this.ipAddress -eq "0.0.0.0") {
             return "add cname=0.0.0.0 name=$( $this.hostName ) type=CNAME comment=`"$( $comment )`""
         }
         return "add address=$( $this.ipAddress ) name=$( $this.hostName ) type=A comment=`"$( $comment )`""
+    }
+
+    hidden
+    [Boolean]
+    isValidMode() {
+        return $this.mode -eq "Both" -Or
+               ($this.mode -eq "Unblock" -And $this.ipAddress -ne "0.0.0.0") -Or
+               ($this.mode -eq "Block" -And $this.ipAddress -eq "0.0.0.0")
     }
 
 }

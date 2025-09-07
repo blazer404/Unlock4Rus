@@ -1,6 +1,11 @@
 Write-Host "- Loading modules..."
 
-$modules = Get-ChildItem -Path "$PSScriptRoot\classes" -Recurse -Filter *.ps1 -ErrorAction Stop
+$dirs = @(
+    "$PSScriptRoot\base"
+    "$PSScriptRoot\modules"
+)
+
+$modules = Get-ChildItem -Path $dirs -Recurse -Filter *.ps1 -ErrorAction Stop
 
 $modules | ForEach-Object {
     $exists = Get-Module -Name $_.BaseName -ErrorAction SilentlyContinue
