@@ -8,7 +8,7 @@ class Converter {
     hidden [String]$hostName
     hidden [String]$groupName
 
-    hidden[Array]$processedHostNames
+    hidden [System.Collections.Generic.HashSet[String]]$processedHostNames
     hidden[String]$commentPrefix
 
 
@@ -18,7 +18,7 @@ class Converter {
         $this.mode = $mode
 
         $this.ipAddress = $this.hostName = $this.groupName = ""
-        $this.processedHostNames = @()
+        $this.processedHostNames = [System.Collections.Generic.HashSet[string]]::new()
         $this.commentPrefix = "U4R"
     }
 
@@ -85,14 +85,18 @@ class Converter {
             return ""
         }
 
-        $exploded = $line.Split(" ")
+        $exploded = $line.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
         $this.ipAddress = $exploded[0]
         $this.hostName = $exploded[1]
-
-        if ($this.processedHostNames -contains $this.hostName) {
+        if (!$this.ipAddress -or !$this.hostName) {
             return ""
         }
-        $this.processedHostNames += $this.hostName
+
+        $lineExists = $this.processedHostNames.Contains($this.hostName)
+        if ($lineExists) {
+            return ""
+        }
+        $this.processedHostNames.Add($this.hostName) | Out-Null
 
         return $this.formattedLine()
     }
@@ -125,9 +129,9 @@ class Converter {
     hidden
     [Boolean]
     isValidMode() {
-        return $this.mode -eq "Both" -Or
-               ($this.mode -eq "Unblock" -And $this.ipAddress -ne "0.0.0.0") -Or
-               ($this.mode -eq "Block" -And $this.ipAddress -eq "0.0.0.0")
+        return $this.mode -eq "Both" -or
+               ($this.mode -eq "Unblock" -and $this.ipAddress -ne "0.0.0.0") -or
+               ($this.mode -eq "Block" -and $this.ipAddress -eq "0.0.0.0")
     }
 
 }
