@@ -1,5 +1,3 @@
-using module "..\base\MenuEntry.ps1"
-
 class MenuRenderer {
 
     static
