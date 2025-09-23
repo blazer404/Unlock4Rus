@@ -6,6 +6,6 @@ $modules | ForEach-Object {
     $exists = Get-Module -Name $_.BaseName -ErrorAction SilentlyContinue
     if ($exists) {
         Remove-Module -Name $_.BaseName -Force -ErrorAction Stop
+        # Write-Host "  $( $_.Name )" -ForegroundColor Gray
     }
-    # Write-Host "  $( $_.Name )" -ForegroundColor Gray
 }
