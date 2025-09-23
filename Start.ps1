@@ -2,6 +2,7 @@ using module ".\core\Autoloader.ps1"
 
 
 function Main() {
+    $Host.UI.RawUI.BackgroundColor = 'black'
     while ($true) {
         Clear-Host
         [LogoRenderer]::show()
