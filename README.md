@@ -6,7 +6,7 @@
 > Позволяет обходить региональные блокировки зарубежных ИИ-сервисов, соцсетей, игр и других ресурсов из России, а также
 > блокирует вредные сайты.
 >
-> За основу взят `hosts` от **[AvenCores](https://github.com/AvenCores/Unlock_AI_and_EN_Services_for_Russia)**.
+> За основу взят `hosts` от **[ImMALWARE](https://github.com/ImMALWARE/dns.malw.link)**.
 
 ---
 
@@ -105,4 +105,4 @@
 ---
 
 Полный список доменов смотрите в оригинальном
-[`hosts`](https://github.com/AvenCores/Unlock_AI_and_EN_Services_for_Russia/blob/main/source/system/etc/hosts).
+[`hosts`](https://github.com/ImMALWARE/dns.malw.link/blob/master/hosts).
