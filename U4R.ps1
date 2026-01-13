@@ -1,8 +1,18 @@
 using module ".\core\Autoloader.ps1"
 
+Param([string]$M = "")
 
 function Main() {
     $Host.UI.RawUI.BackgroundColor = 'black'
+    switch ($M) {
+        "1" { ProcessHosts -mode "Unblock" }
+        "2" { ProcessHosts -mode "Block" }
+        "3" { ProcessHosts -mode "Both" }
+        Default { ShowMenu }
+    }
+}
+
+function ShowMenu() {
     while ($true) {
         Clear-Host
         [LogoRenderer]::show()
@@ -19,6 +29,8 @@ function Main() {
 }
 
 function ProcessHosts([String]$mode) {
+    Clear-Host
+    [LogoRenderer]::show()
     DownloadHosts
     ConvertHosts -mode $mode
     UnloadModules
