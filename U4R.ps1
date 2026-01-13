@@ -3,7 +3,6 @@ using module ".\core\Autoloader.ps1"
 Param([string]$M = "")
 
 function Main() {
-    $Host.UI.RawUI.BackgroundColor = 'black'
     switch ($M) {
         "1" { ProcessHosts -mode "Unblock" }
         "2" { ProcessHosts -mode "Block" }

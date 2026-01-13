@@ -1,3 +1,5 @@
+$Host.UI.RawUI.BackgroundColor = 'black'
+
 Write-Host "- Loading modules..."
 
 $dirs = @(
