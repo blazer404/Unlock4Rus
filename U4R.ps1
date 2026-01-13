@@ -7,6 +7,7 @@ function Main() {
         "1" { ProcessHosts -mode "Unblock" }
         "2" { ProcessHosts -mode "Block" }
         "3" { ProcessHosts -mode "Both" }
+        "4" { ProcessHosts -mode "Download" }
         Default { ShowMenu }
     }
 }
@@ -21,6 +22,7 @@ function ShowMenu() {
             "1" { ProcessHosts -mode "Unblock" }
             "2" { ProcessHosts -mode "Block" }
             "3" { ProcessHosts -mode "Both" }
+            "4" { ProcessHosts -mode "Download" }
             "q" { ProcessExit }
             Default { break }
         }
@@ -31,7 +33,9 @@ function ProcessHosts([String]$mode) {
     Clear-Host
     [LogoRenderer]::show()
     DownloadHosts
-    ConvertHosts -mode $mode
+    if ($mode -ne "Download") {
+        ConvertHosts -mode $mode
+    }
     UnloadModules
     Done
     exit $CODE_SUCCESS
