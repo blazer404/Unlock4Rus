@@ -34,12 +34,12 @@ function ProcessHosts([String]$mode) {
     ConvertHosts -mode $mode
     UnloadModules
     Done
-    exit 0
+    exit $CODE_SUCCESS
 }
 
 function ProcessExit() {
     UnloadModules
-    exit 0
+    exit $CODE_SUCCESS
 }
 
 function DownloadHosts() {
@@ -50,8 +50,7 @@ function DownloadHosts() {
     } catch {
         Write-Host "  Hosts file download failed!" -ForegroundColor Red
         Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
-        Read-Host
-        exit(10)
+        exit $CODE_ERROR_DOWNLOAD
     }
     Write-Host "  Hosts file downloaded to `"$( $HOSTS_DST )`"" -ForegroundColor Green
 }
@@ -64,8 +63,7 @@ function ConvertHosts([String]$mode) {
     } catch {
         Write-Host "  Hosts file conversion failed!" -ForegroundColor Red
         Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
-        Read-Host
-        exit(20)
+        exit $CODE_ERROR_CONVERSION
     }
     Write-Host "  Hosts file converted to `"$( $STATIC_DNS_DST )`"" -ForegroundColor Green
 }
@@ -77,8 +75,7 @@ function UnloadModules() {
     } catch {
         Write-Host "  Unload modules failed!" -ForegroundColor Red
         Write-Host "  $( $_.Exception.Message )" -ForegroundColor Red
-        Read-Host
-        exit(30)
+        exit $CODE_ERROR_UNLOAD
     }
 }
 
