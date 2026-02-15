@@ -3,13 +3,16 @@ using module ".\core\Autoloader.ps1"
 Param([string]$M = "")
 
 function Main() {
-    switch ($M) {
-        "1" { ProcessHosts -mode "Unblock" }
-        "2" { ProcessHosts -mode "Block" }
-        "3" { ProcessHosts -mode "Both" }
-        "4" { ProcessHosts -mode "Download" }
-        Default { ShowMenu }
+    if ($M -eq "") {
+        ShowMenu
+        return
     }
+    $mode = ResolveModeByChoice -choice $M
+    if ($null -eq $mode) {
+        Write-Host "Invalid mode ""$M"".`nAvailable:`n 1 - $MODE_UNBLOCK`n 2 - $MODE_BLOCK`n 3 - $MODE_BOTH`n 4 - $MODE_DOWNLOAD" -ForegroundColor Red
+        exit $CODE_ERROR_MODE_CHOISE
+    }
+    ProcessHosts -mode $mode
 }
 
 function ShowMenu() {
@@ -18,14 +21,25 @@ function ShowMenu() {
         [LogoRenderer]::show()
         [MenuRenderer]::show()
         $choice = Read-Host "`n- Enter your choice"
-        switch ($choice) {
-            "1" { ProcessHosts -mode "Unblock" }
-            "2" { ProcessHosts -mode "Block" }
-            "3" { ProcessHosts -mode "Both" }
-            "4" { ProcessHosts -mode "Download" }
-            "q" { ProcessExit }
-            Default { break }
+        if ($choice -eq $CHOISE_QUIT) {
+            ProcessExit
+            return
         }
+        $mode = ResolveModeByChoice -choice $choice
+        if ($null -eq $mode) {
+            continue
+        }
+        ProcessHosts -mode $mode
+    }
+}
+
+function ResolveModeByChoice([String]$choice) {
+    switch ($choice) {
+        "1" { return $MODE_UNBLOCK }
+        "2" { return $MODE_BLOCK }
+        "3" { return $MODE_BOTH }
+        "4" { return $MODE_DOWNLOAD }
+        Default { return $null }
     }
 }
 
@@ -33,7 +47,7 @@ function ProcessHosts([String]$mode) {
     Clear-Host
     [LogoRenderer]::show()
     DownloadHosts
-    if ($mode -ne "Download") {
+    if ($mode -ne $MODE_DOWNLOAD) {
         ConvertHosts -mode $mode
     }
     UnloadModules
@@ -88,6 +102,5 @@ function Done() {
     Write-Host "  Done! Press Any key to exit..." -ForegroundColor Cyan
     Read-Host
 }
-
 
 Main

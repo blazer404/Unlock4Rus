@@ -9,7 +9,7 @@ class HostsConverter {
     hidden [String]$groupName
 
     hidden [System.Collections.Generic.HashSet[String]]$processedHostNames
-    hidden[String]$commentPrefix
+    hidden [String]$commentPrefix
 
 
     HostsConverter([String]$source, [String]$destination, [String]$mode) {
@@ -17,34 +17,50 @@ class HostsConverter {
         $this.destination = $destination
         $this.mode = $mode
 
-        $this.ipAddress = $this.hostName = $this.groupName = ""
+        $this.validateExecutionMode # throws on error
+
+        $this.ipAddress = ""
+        $this.hostName = ""
+        $this.groupName = ""
         $this.processedHostNames = [System.Collections.Generic.HashSet[string]]::new()
         $this.commentPrefix = "U4R"
     }
+
+    hidden
+    [Void]
+    validateExecutionMode() {
+        $supportedModes = @("Unblock", "Block", "Both")
+        if ($this.mode -notin $supportedModes) {
+            throw "Unsupported conversion mode: $( $this.mode )"
+        }
+    }
+
 
     [Void]
     convert() {
         Write-Host "  Mode: $( $this.mode )" -ForegroundColor Yellow
 
-        $this.removeDestinationIfExists()
-        $this.writeScriptStart()
+        $this.removeDestinationFileIfExists()
+        $this.writeScriptStartLines()
         $data = $this.readSource()
         foreach ($line in $data) {
             $isComment = $line.StartsWith("#")
             if ($isComment) {
                 $this.writeToDestination("`n$line")
             }
+
             $line = $this.convertOneLine($line)
             if ($line.Length -eq 0) {
                 continue
             }
+
             $this.writeToDestination($line)
         }
     }
 
     hidden
     [Void]
-    removeDestinationIfExists() {
+    removeDestinationFileIfExists() {
         if (Test-Path $this.destination) {
             Remove-Item $this.destination -Force -ErrorAction Stop
         }
@@ -52,7 +68,7 @@ class HostsConverter {
 
     hidden
     [Void]
-    writeScriptStart() {
+    writeScriptStartLines() {
         $escapedCommentPrefix = $this.escapedString($this.commentPrefix)
         $this.writeToDestination("/ip dns static")
         $this.writeToDestination("remove [find where comment~`"^$( $escapedCommentPrefix )`"]")
@@ -85,20 +101,28 @@ class HostsConverter {
             return ""
         }
 
-        $exploded = $line.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
-        $this.ipAddress = $exploded[0]
-        $this.hostName = $exploded[1]
-        if (!$this.ipAddress -or !$this.hostName) {
+        $isValidHostRecord = $this.tryReadHostRecord($line);
+        if (-not $isValidHostRecord) {
             return ""
         }
 
-        $lineExists = $this.processedHostNames.Contains($this.hostName)
-        if ($lineExists) {
+        $isDuplicate = $this.processedHostNames.Contains($this.hostName)
+        if ($isDuplicate) {
             return ""
         }
+
         $this.processedHostNames.Add($this.hostName) | Out-Null
 
         return $this.formattedLine()
+    }
+
+    hidden
+    [Boolean]
+    tryReadHostRecord([String]$line) {
+        $exploded = $line.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+        $this.ipAddress = $exploded[0]
+        $this.hostName = $exploded[1]
+        return $this.ipAddress -ne "" -and $this.hostName -ne ""
     }
 
     hidden
